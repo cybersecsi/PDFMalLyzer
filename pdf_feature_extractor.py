@@ -8,6 +8,11 @@ import time
 import os
 import signal
 from fitz import TextPage
+
+def e():
+        sys.exit(-1)
+
+
 dir = os.getcwd()
 path = sys.argv[1]
 if(not os.path.isabs(path)):      #if the given path is not absolute, we should convert it to one
@@ -50,17 +55,19 @@ for j in os.listdir(path):
         print("title is "+str(title))
 
         #whether file is encrypted
-        isEncrypted = metadata['encryption']
-        if(not isEncrypted):
-                isEncrypted = 0
-        else:
-                isEncrypted = 1
+        isEncrypted = -1
+        if metadata:
+                isEncrypted = metadata['encryption']
+                if(not isEncrypted):
+                        isEncrypted = 0
+                else:
+                        isEncrypted = 1
         #number of objects
-        objects = doc.xrefLength()
-        print("object is "+str(object))
+        objects = doc.xref_length()
+                # print("object is "+str(object))
 
         # printing number of pages in pdf file
-        numPages = doc.pageCount
+        numPages = doc.page_count
         print("numpages is "+str(numPages))
 
         #extracted text
@@ -72,7 +79,7 @@ for j in os.listdir(path):
         text = ""
         try:
                 for page in doc:
-                        text += page.getText()
+                        text += page.get_text()
                         if (len(text) > 100):
                                 found = "Yes"
                                 break
@@ -85,7 +92,7 @@ for j in os.listdir(path):
                  
         #print("file contains text " + str(found))
         # number of embedded files
-        embedcount = doc.embeddedFileCount()
+        embedcount = doc.embfile_count()
         print("embedcount is "+str(embedcount))
 
         
