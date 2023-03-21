@@ -49,6 +49,7 @@ def sig_handler(signum, frame):
 md5_vals = []
 for j in os.listdir(path):
         f = path + "/" + j
+        print("[+] Path: {}".format(f))
         #pdfFileObj = open(f,'rb')
         try:
                 doc = fitz.open(f)
