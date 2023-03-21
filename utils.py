@@ -37,6 +37,7 @@ def pdfid(f):
     Args:
         filename (str): the full path filename
     """
+    print("[+] Structural of {}".format(f))
     os.chdir('pdfid')
     ret = {}
     out = subprocess.getoutput(pfid_cmd(f))
