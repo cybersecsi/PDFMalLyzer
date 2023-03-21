@@ -19,7 +19,7 @@ def md5sum(f):
 
 
 def pfid_cmd(f):
-    return "python pdfid.py " + f 
+    return "python pdfid.py \"" + f + "\""
 
 def parse_header(s):
     return s.split(":")[1].strip()
@@ -27,6 +27,7 @@ def parse_header(s):
 def _clean_ret(ret):
     clean_ret = {key.replace("/", "").strip() if key != 'header' else key: int(item) if key != 'header' else item.strip() for key, item in ret.items()}
     # Replace name
+    print(clean_ret)
     clean_ret['pageno'] = clean_ret.pop('Page')
 
     return clean_ret
@@ -37,10 +38,11 @@ def pdfid(f):
     Args:
         filename (str): the full path filename
     """
-    print("[+] Structural of {}".format(f))
+    the_cmd = pfid_cmd(f)
+    print("[+] {}".format(the_cmd))
     os.chdir('pdfid')
     ret = {}
-    out = subprocess.getoutput(pfid_cmd(f))
+    out = subprocess.getoutput(the_cmd)
     splitted_lines = out.split("\n")[1:]
     header = parse_header(splitted_lines[0])
     ret['header'] = header
