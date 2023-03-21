@@ -9,8 +9,18 @@ import os
 import signal
 from fitz import TextPage
 
+import utils
+
 def e():
         sys.exit(-1)
+
+def usage():
+      print("[-] Usage: python pdf_feature_extractor.py <path_containing_pdfs>")
+      e()
+
+
+if len(sys.argv) != 2: 
+      usage()
 
 
 dir = os.getcwd()
@@ -128,15 +138,17 @@ command = ""
 header = ['header','obj','endobj','stream','endstrean','xref','trailer','startxref','pageno' ,'encrypt','ObjStm','JS','Javascript','AA','OpenAction','Acroform','JBIG2Decode','RichMedia','launch','EmbeddedFile','XFA','Colors']
 with open(os.path.relpath("pdfid/output.csv"),'w',encoding='UTF8') as output:
         output.write(','.join(header))
-        os.chdir('pdfid')
+        # os.chdir('pdfid')
         t0 = time.time()
         for j in os.listdir(path):
          f = path + "/" + j
-         out = subprocess.getoutput("python pdfid.py "+f+" | awk '{print $2}' | tail -n +2 | "+var+"")
-         output.write("\n" + out)
-         d = time.time() - t0
+        out = utils.pdfid(f)
+        print(out)
+        # #  print("python pdfid.py "+f+" | awk '{print $2}' | tail -n +2 | "+var+"")
+        output.write("\n" + out)
+        d = time.time() - t0
         print("duration: %.2f s." % d)
-os.chdir('../')
+
 print("finished features")
 os.system("paste result.csv pdfid/output.csv > output1.csv")
 os.remove("pdfid/output.csv")
