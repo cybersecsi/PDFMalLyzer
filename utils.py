@@ -16,7 +16,7 @@ def parse_header(s):
     return s.split(":")[1].strip()
 
 def _clean_ret(ret):
-    clean_ret = {key.replace("/", "") if key != 'header' else key: int(item) if key != 'header' else item for key, item in ret.items()}
+    clean_ret = {key.replace("/", "").strip() if key != 'header' else key: int(item) if key != 'header' else item.strip() for key, item in ret.items()}
     # Replace name
     clean_ret['pageno'] = clean_ret.pop('Page')
 

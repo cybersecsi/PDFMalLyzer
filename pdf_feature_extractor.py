@@ -135,18 +135,18 @@ print("general features extracted successfully...")
 print("extracting structural features...")        #extracting structural features using pdfid
 var =  str(r"tr '\n' ','")
 command = ""
-header = ['header','obj','endobj','stream','endstrean','xref','trailer','startxref','pageno' ,'encrypt','ObjStm','JS','Javascript','AA','OpenAction','Acroform','JBIG2Decode','RichMedia','launch','EmbeddedFile','XFA','Colors']
+header =  ['header', 'obj', 'endobj', 'stream', 'endstream', 'xref', 'trailer', 'startxref', 'pageno', 'Encrypt', 'ObjStm', 'JS', 'JavaScript', 'AA', 'OpenAction', 'AcroForm', 'JBIG2Decode', 'RichMedia', 'Launch', 'EmbeddedFile', 'XFA', 'URI', 'Colors']
 with open(os.path.relpath("pdfid/output.csv"),'w',encoding='UTF8') as output:
         output.write(','.join(header))
         # os.chdir('pdfid')
         t0 = time.time()
         for j in os.listdir(path):
-         f = path + "/" + j
-        out = utils.pdfid(f)
-        print(out)
-        # #  print("python pdfid.py "+f+" | awk '{print $2}' | tail -n +2 | "+var+"")
-        output.write("\n" + out)
-        d = time.time() - t0
+                f = path + "/" + j
+                out = utils.pdfid(f)
+                out = list(out.values())
+                out = ','.join(str(o) for o in out)
+                output.write("\n" + out)
+                d = time.time() - t0
         print("duration: %.2f s." % d)
 
 print("finished features")

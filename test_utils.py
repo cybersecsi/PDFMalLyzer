@@ -34,6 +34,7 @@ def test_pdfid():
     'Colors': 0
 }
 
+    print(list(expected_val.keys()))
 
     ret = pdfid(get_test_pdf())
     assert ret == expected_val
