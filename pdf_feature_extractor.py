@@ -9,6 +9,10 @@ import os
 import signal
 from fitz import TextPage
 
+
+import hashlib
+
+
 import utils
 
 def e():
@@ -32,6 +36,7 @@ if(not os.path.isabs(path)):      #if the given path is not absolute, we should 
          print("the path is not absolute and the new path is "+str(path))
 if(os.path.isdir(path)):
         res = pd.DataFrame(columns=('pdfsize','metadata size', 'pages','xref length','title characters','isEncrypted','embedded files','images','contains text'))
+
 else:
         print("specify a valid pdf folder path as an argument")
         sys.exit()
@@ -41,9 +46,9 @@ def sig_handler(signum, frame):
     print("segfault")
 
 
+md5_vals = []
 for j in os.listdir(path):
         f = path + "/" + j
-        print(f)
         #pdfFileObj = open(f,'rb')
         try:
                 doc = fitz.open(f)
@@ -51,6 +56,7 @@ for j in os.listdir(path):
                 #file = open(f, 'rb')
         except:
                 continue
+        print(doc.embfile_names())
         #metadata
         metadata = doc.metadata
         print("metadata is "+str(metadata))
@@ -96,7 +102,8 @@ for j in os.listdir(path):
         except:
          #       break
                  found = "unclear"
-                 res.loc[i] = [pdfsize, len(str(metadata).encode('utf-8'))] + [numPages] + [objects] + [len(title)] + [isEncrypted] + [embedcount] + [-1] + [found] +['']
+                 res.loc[i] = [pdfsize, len(str(metadata).encode('utf-8'))] + [numPages] + [objects] + [len(title)] + [isEncrypted] + [embedcount] + [-1] + [found] 
+                 md5_vals.append(utils.md5sum(f))
                  i +=1
                  continue
                  
@@ -126,8 +133,12 @@ for j in os.listdir(path):
 
 
         #writing the features in a csv file
-        res.loc[i] = [pdfsize, len(str(metadata).encode('utf-8'))] + [numPages] + [objects] + [len(title)] + [isEncrypted] + [embedcount] + [imgcount] + [found] +['']
+        res.loc[i] = [pdfsize, len(str(metadata).encode('utf-8'))] + [numPages] + [objects] + [len(title)] + [isEncrypted] + [embedcount] + [imgcount] + [found] 
+        md5_vals.append(utils.md5sum(f))
         i +=1
+# Change the index of the dataframe
+res = res.set_axis(md5_vals)
+res.index.name = 'MD5'
 res.to_csv(os.path.relpath("result.csv",start=os.curdir))
 print("general features extracted successfully...")
 

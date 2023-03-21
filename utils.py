@@ -1,5 +1,6 @@
 # python pdfid.py /Users/gx1/git/secsi/PDFMalLyzer/tests/small_file/02solp.pdf
 
+import hashlib
 import os
 import subprocess
 
@@ -7,6 +8,14 @@ var =  str(r"tr '\n' ','")
 
 STRUCTURAL_HEADER = ['header','obj','endobj','stream','endstrean','xref','trailer','startxref','pageno' ,'encrypt','ObjStm','JS','Javascript','AA','OpenAction','Acroform','JBIG2Decode','RichMedia','launch','EmbeddedFile','XFA', 'URI', 'Colors']
 
+
+def md5sum(f):
+    md5_hash = hashlib.md5()
+    with open(f, "rb") as f:
+        # Read and update hash in chunks of 4K
+        for byte_block in iter(lambda: f.read(4096),b""):
+            md5_hash.update(byte_block)
+        return md5_hash.hexdigest()
 
 
 def pfid_cmd(f):

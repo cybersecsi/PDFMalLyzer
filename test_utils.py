@@ -6,6 +6,10 @@ def get_test_pdf():
 
 
 
+def test_md5():
+    assert md5sum(get_test_pdf()) == "77f3e768f0c3a240f052c711ac021a1b"
+
+
 
 def test_pdfid():
     expected_val = {
