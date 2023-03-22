@@ -48,7 +48,7 @@ def parse_header(s):
     return ret if ret in PDF_VALID_VERSIONS else 'Malformed'
 
 def _obfuscated_fields(ret):
-    FIELDS = ['/JS', '/JavaScript', '/AA', '/OpenAction', '/AcroForm', '/JBIG2Decode', '/RichMedia', '/Launch', '/EmbeddedFile', '/XFA']
+    FIELDS = ['/Page', '/JS', '/JavaScript', '/AA', '/OpenAction', '/AcroForm', '/JBIG2Decode', '/RichMedia', '/Launch', '/EmbeddedFile', '/XFA']
     for f in FIELDS:
         # Get the value
         val = ret[f]
@@ -71,6 +71,7 @@ def _clean_ret(ret):
     clean_ret = {key.replace("/", "").strip() if key != 'header' else key: int(item) if key != 'header' else item.strip() for key, item in ret.items()}
     # Replace name
     clean_ret['pageno'] = clean_ret.pop('Page')
+    clean_ret['pageno_Obfuscated'] = clean_ret.pop('Page_Obfuscated')
 
     return clean_ret
 
